@@ -1,0 +1,89 @@
+
+<p>
+  employee works!
+</p>
+<div class="row">   
+<div class="col-sm-6">
+<form [formGroup]="empform" (ngSubmit)="onSubmit(empform.value)">
+
+  <div class="form-group">
+   
+    <mat-form-field>
+      <mat-label>Name</mat-label>
+      <input  formControlName="EmpName" type="text" placeholder="Enter Name" id="email" matInput>
+    </mat-form-field>
+   <!-- <input formControlName="EmpName" type="text" class="form-control" placeholder="Enter Name" id="email">-->
+    <span style="color:rgb(114, 0, 0)" *ngIf="!empform.get('EmpName').value && empform.get('EmpName').touched">Required</span>
+  </div>
+  <div class="form-group">    
+    <mat-form-field>
+      <mat-label>Textarea</mat-label>
+      <textarea formControlName="Address" class="form-control" rows="5" id="comment" matInput></textarea>
+      
+    </mat-form-field>
+   
+    <span style="color:rgb(114, 0, 0)" *ngIf="!empform.get('Address').value && empform.get('Address').touched">Required</span>
+  </div>
+    <!---->
+    <p>
+      <label>
+        <input formControlName="Gender" type="radio"  value="0">
+        <span>Male</span>
+      </label>
+    </p>
+    <p>
+      <label>
+        <input formControlName="Gender" type="radio" value="1">
+        <span>Female</span>
+      </label>
+    </p>
+ 
+   <!---->
+   <mat-form-field class="demo-full-width">  
+    <input matInput [matDatepicker]="picker"matTooltip="Enter Date Of Birth" formControlName="DateOfBirth"placeholder="Choose Date Of Birth" >  
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>  
+    <mat-datepicker #picker></mat-datepicker>  
+  </mat-form-field>  
+<br/>
+  <mat-form-field>
+    <mat-label>Select</mat-label>
+    <mat-select  formControlName="CountryID">
+    
+      <mat-option  *ngFor="let obj of allcountry" [value]="obj.CountryID">{{obj.CountryName}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  
+  <p>
+    <label>
+      <input formControlName="isActive" type="checkbox" class="filled-in" checked="checked" />
+      <span>T&C</span>
+    </label>
+  </p>
+<input type="submit" value="Add" class="btn btn-success" [disabled]="!empform.valid">
+</form>
+{{msg}}  
+</div>
+<div class="col-sm-6">
+
+  <table class="table" >
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>DateOfBirth</th>
+        <th>Gender</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tr *ngFor="let loadallemp1 of allEmployees | async">
+      <td>{{loadallemp1.EmpName}}</td>
+      <td>{{loadallemp1.DateOfBirth | date}}</td>
+      <td>{{loadallemp1.Gender ==0?'male':'female'}}</td>
+      <td><button type="button" class="btn btn-info"matTooltip="Click Edit Button"(click)="LoadData(loadallemp1.EmpId)">Edit</button>  </td>
+      <td><button type="button" class="btn btn-danger"matTooltip="Click Edit Button"(click)="DeleteEmployeeDetails(loadallemp1.EmpId)">Delete</button>  </td>
+      
+    </tr>
+    
+</table>
+
+</div>
+</div>
