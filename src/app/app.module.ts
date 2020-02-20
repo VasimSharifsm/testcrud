@@ -16,6 +16,7 @@ import { RegisterComponent } from './register/register.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';  
 // used to create fake backend
 import { fakeBackendProvider, JwtInterceptor, ErrorInterceptor } from './_helpers';
+import { TokenInterceptor } from './_services/token.interceptor';
 
 
 
@@ -50,8 +51,8 @@ import { fakeBackendProvider, JwtInterceptor, ErrorInterceptor } from './_helper
     AppRoutingModule,
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-        { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },  
+    { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
+        { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },  
     fakeBackendProvider
   ],// provider used to create fake backend],
   bootstrap: [AppComponent, 

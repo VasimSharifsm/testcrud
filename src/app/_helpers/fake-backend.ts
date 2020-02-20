@@ -21,9 +21,9 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 
         function handleRoute() {
             switch (true) {
-                case url.endsWith('/users/authenticate') && method === 'POST':
+                case url.endsWith('/users/authenticate') && request.method === 'POST':
                     return authenticate();
-                    case url.endsWith('/users/register') && method === 'POST':
+                    case url.endsWith('/users/register') && request.method === 'POST':
                         return register();
                 default:
                     // pass through any requests not handled above
@@ -34,16 +34,26 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         // route functions
 
         function authenticate() {
-            const { username, password } = body;
-            const user = users.find(x => x.username === username && x.password === password);
-            if (!user) return error('Username or password is incorrect');
-            return ok({
-                id: user.id,
-                username: user.username,
-                firstName: user.firstName,
-                lastName: user.lastName,
-                token: 'fake-jwt-token'
-            })
+            let filteredUsers = users.filter(user => {
+                return user.username === request.body.username && user.password === request.body.password;
+            });
+
+            if (filteredUsers.length) {
+                // if login details are valid return 200 OK with user details and fake jwt token
+                let user = filteredUsers[0];
+                let body = {
+                    id: user.id,
+                    username: user.username,
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    token: 'fake-jwt-token'
+                };
+
+                return of(new HttpResponse({ status: 200, body: body }));
+            } else {
+                // else return 400 bad request
+                return throwError({ error: { message: 'Username or password is incorrect' } });
+            }
         }
         function register() {
             const user = body

@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { first } from 'rxjs/operators';
 
 import { AuthenticationService } from '../_services'
+import { HttpHeaders } from '@angular/common/http';
 
 @Component({templateUrl: 'login.component.html'})
 export class LoginComponent implements OnInit {
@@ -13,7 +14,7 @@ export class LoginComponent implements OnInit {
     returnUrl: string;
     error: string;
     success: string
-
+    Success: boolean = false;
     constructor(
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
@@ -28,8 +29,8 @@ export class LoginComponent implements OnInit {
 
     ngOnInit() {
         this.loginForm = this.formBuilder.group({
-            username: ['', Validators.required],
-            password: ['', Validators.required]
+            username: new FormControl('',Validators.required),
+            password: new FormControl('',Validators.required)
         });
 
         // get return url from route parameters or default to '/'
@@ -55,7 +56,9 @@ export class LoginComponent implements OnInit {
         }
 
         this.loading = true;
-        this.authenticationService.login(this.f.username.value, this.f.password.value)
+        
+/*
+this.authenticationService.login(this.f.username.value, this.f.password.value)
             .pipe(first())
             .subscribe(
                 data => {
@@ -65,5 +68,36 @@ export class LoginComponent implements OnInit {
                     this.error = error;
                     this.loading = false;
                 });
+*/
+// If form is Valid
+        if(this.loginForm.valid){
+          
+            debugger;
+            this.authenticationService.getToken(this.loginForm)
+            .pipe(first())
+            .subscribe(
+                data => {
+                    if (data != null && data != undefined && data != '') {
+                        let myObj = JSON.parse(data);
+                        localStorage.setItem('token', myObj.access_token );     
+                        if(myObj.access_token!=""){
+                            alert("Token Activated");
+                            localStorage.setItem('username',this.loginForm.controls['username'].value);
+                            this.authenticationService.isAuth();
+                            this.Success=true;
+                            this.router.navigate(['./home']);
+                            this.loading = false;
+                    }else{
+                        alert("no token");
+                    }
+                      }
+                },
+                error => {
+                    this.loading = false;
+                    console.log(error)
+                    this.error = error.error;
+                    
+                });
     }
+}
 }
