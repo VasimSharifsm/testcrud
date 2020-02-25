@@ -25,6 +25,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
                     return authenticate();
                     case url.endsWith('/users/register') && request.method === 'POST':
                         return register();
+                        
                 default:
                     // pass through any requests not handled above
                     return next.handle(request);
@@ -55,6 +56,9 @@ export class FakeBackendInterceptor implements HttpInterceptor {
                 return throwError({ error: { message: 'Username or password is incorrect' } });
             }
         }
+
+       
+
         function register() {
             const user = body
 
@@ -69,6 +73,8 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             return ok();
         }
         // helper functions
+
+        
 
         function ok(body?) {
             return of(new HttpResponse({ status: 200, body }))

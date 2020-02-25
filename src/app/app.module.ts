@@ -15,8 +15,9 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';  
 // used to create fake backend
-import { fakeBackendProvider, JwtInterceptor, ErrorInterceptor } from './_helpers';
+import { fakeBackendProvider, JwtInterceptor, ErrorInterceptor, AuthGuard } from './_helpers';
 import { TokenInterceptor } from './_services/token.interceptor';
+import { UserService, AuthenticationService } from './_services';
 
 
 
@@ -51,6 +52,9 @@ import { TokenInterceptor } from './_services/token.interceptor';
     AppRoutingModule,
   ],
   providers: [
+    AuthGuard,
+    UserService,
+    AuthenticationService,
     { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },  
     fakeBackendProvider

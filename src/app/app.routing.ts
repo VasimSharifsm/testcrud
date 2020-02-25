@@ -11,18 +11,17 @@ import { AuthGuard } from './_helpers';
 const routes: Routes = [
     {  path : 'login', component: LoginComponent},
     {  path : 'register', component: RegisterComponent},
-    { path : '',// redirectTo:'/home',pathMatch:'full',
+    { 
     
-    canActivate: [AuthGuard],
-    children:[
-    { path : 'home', component: EmployeesComponent },
+      path : '',
+      canActivate: [AuthGuard],
+      children:[
+
+      { path : 'home', component: EmployeesComponent },
   ]
   
-},
-//   {  path : 'home', component: EmployeesComponent},
-//   {  path : 'login', component: LoginComponent},
-//   {  path : 'register', component: RegisterComponent},
-//   { path : "**", component: PageNotFoundComponent}
+    },
+  // otherwise redirect to home
 { path : "**", redirectTo: '/login' },
 
 

@@ -13,11 +13,17 @@ import { Observable } from 'rxjs';
 export class EmployeeComponent implements OnInit {
   empform : any;
   msg =null;
-  
+
+
   allEmployees: Observable<Employee[]>;  
   allcountry: any;  
   EmpId = null;
-  constructor(private fb : FormBuilder, private employeeService:EmployeeService) { }
+  constructor(private fb : FormBuilder, private employeeService:EmployeeService,
+   // private authenticationService: AuthenticationService,
+   // private userService: UserService
+
+    ) {        // this.currentUser = this.authenticationService.currentUserValue;
+    }
 
   ngOnInit() {
 
@@ -32,6 +38,8 @@ export class EmployeeComponent implements OnInit {
     });
     this.loadallemp();
     this.getcountry();
+    
+
   }
   onSubmit(){
     debugger;
@@ -108,5 +116,9 @@ export class EmployeeComponent implements OnInit {
       );
     }
   }
+
+
+
+
  
 }
