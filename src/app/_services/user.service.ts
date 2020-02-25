@@ -10,11 +10,16 @@ export class UserService {
   registerData = {
         Email: null,
         Password: null,
-        ConfirmPassword:null
+        ConfirmPassword:null,
+        Roles:null
       };
     getAll() {
        // return this.http.get<any[]>(`${environment.API_URL}/users`);
        return this.http.get<User[]>(`/users`);
+    }
+    getAllRoles() {
+      var reqHeader = new HttpHeaders({ 'No-Auth': 'True' });
+      return this.http.get(environment.API_URL + '/api/GetAllRoles', { headers: reqHeader });
     }
     getById(id: number) {
         return this.http.get(`/users/` + id);
@@ -36,6 +41,9 @@ export class UserService {
        this.registerData.Email=_data.username;
        this.registerData.Password=_data.password;
        this.registerData.ConfirmPassword=_data.confirmpassword;
+       this.registerData.Roles=_data.uroles;
+       debugger;
+       //this.registerData.Roles = _data.
         const _uri = 'http://localhost:57208/' + _relativeUrl;
         //const _uri = 'https://studentmanagementportalsit.azurewebsites.net/' + _relativeUrl;
         console.log(this.registerData);

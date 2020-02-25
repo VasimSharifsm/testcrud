@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
 
 import { UserService, AuthenticationService } from '../_services';
+import { User } from '../_models/user';
 
 @Component({ templateUrl: 'register.component.html' })
 export class RegisterComponent implements OnInit {
@@ -11,7 +12,7 @@ export class RegisterComponent implements OnInit {
     loading = false;
     submitted = false;
     error: string;
-
+    roles: any;
     constructor(
         private formBuilder: FormBuilder,
         private router: Router,
@@ -28,8 +29,22 @@ export class RegisterComponent implements OnInit {
         this.registerForm = this.formBuilder.group({
             username: ['', Validators.required],
             password: ['', [Validators.required, Validators.minLength(6)]],
-            confirmpassword: ['', [Validators.required, Validators.minLength(6)]]
+            confirmpassword: ['', [Validators.required, Validators.minLength(6)]],
+            uroles:['']
         });
+        this.userService
+        .getAllRoles().subscribe(
+            // (data : any)=>{
+            //     data.forEach(obj => obj.selected = false);
+            //     this.roles=data;
+            // }
+            data => {         
+                if (data) {
+                  this.roles = data;
+                }        
+              }
+        );
+        
     }
 
     // convenience getter for easy access to form fields
@@ -37,11 +52,18 @@ export class RegisterComponent implements OnInit {
 
     onSubmit() {
         this.submitted = true;
-
+        
+        //var x =this.roles.filter(x=>x.selected).map(y=>y.Id);
+        // console.log(x)
+        // console.log(this.registerForm.value)
+        // var obj = this.registerForm.value
+        // obj.roles = x;
+        // console.log(obj)
         // stop here if form is invalid
         if (this.registerForm.invalid) {
             return;
         }
+        console.log(this.registerForm.value)
 
         this.loading = true;
         this.userService.register(this.registerForm.value)
